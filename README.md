@@ -54,3 +54,9 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 ## 3.0 User Video
 
 - 비디오 연결을 위한 전체적인 간단한 기본 세팅
+
+## 3.1 Call Controls
+
+- 접속한 디바이스의 정보를 불러온다(카메라, 오디오 등...)
+- 접속 디바이스의 장치를 제어한다(카메라 on/off, 오디오 on/off, 또는 연결 장치 변경 등...)
+- 일단 현재 디바이스의 모든 카메라 정보를 불러오는 깅과, 카메라 on/off기능만 구현
