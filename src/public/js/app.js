@@ -45,10 +45,12 @@ async function getMedia() {
 
 getMedia();
 
+// 내영상에 연결된 오디로를 껐다 켰다 하는 기능
 function handleMuteClick() {
-  myStream
-    .getAudioTracks()
-    .forEach((track) => (track.enabled = !track.enabled));
+  myStream.getAudioTracks().forEach((track) => {
+    console.log("track: ", track);
+    track.enabled = !track.enabled;
+  });
   if (!muted) {
     muteBtn.innerText = "Unmute";
     muted = true;
