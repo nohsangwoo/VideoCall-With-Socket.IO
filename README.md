@@ -64,3 +64,7 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 ## 3.2 Camera Switch
 
 - 선택한 카메라 장치 아이디를 이용하여 사용 하는 카메라를 변경하고 적용한다.
+
+## 3.4 Rooms
+
+- socket.io 방만들고 만들어진 방에 참여하는 기능 구현

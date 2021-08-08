@@ -4,10 +4,14 @@ const myFace = document.getElementById('myFace');
 const muteBtn = document.getElementById('mute');
 const cameraBtn = document.getElementById('camera');
 const camerasSelect = document.getElementById('cameras');
+const call = document.getElementById('call');
+
+call.hidden = true;
 
 let myStream;
 let muted = false;
 let cameraOff = false;
+let roomName;
 
 // 현재 디바이스에 연결된 모든 카메라 정보를 가져오는 기능
 async function getCameras() {
@@ -72,8 +76,6 @@ async function getMedia(deviceId) {
   }
 }
 
-getMedia();
-
 // 내영상에 연결된 오디로를 껐다 켰다 하는 기능
 function handleMuteClick() {
   myStream.getAudioTracks().forEach(track => {
@@ -108,3 +110,42 @@ async function handleCameraChange() {
 muteBtn.addEventListener('click', handleMuteClick);
 cameraBtn.addEventListener('click', handleCameraClick);
 camerasSelect.addEventListener('input', handleCameraChange);
+
+// Welcome Form (join a room)
+
+const welcome = document.getElementById('welcome');
+const welcomeForm = welcome.querySelector('form');
+
+// 방만들기 form에서 방이름 입력하고 방만들기 진행 한 후 작동하는 기능
+// stream 뽑아와서 렌더링하고 기존 방만들기 관련(welcome부분) form hidden설정해서 안보이게 하고
+// call hidden=false로 설정하여 나타나게 하기
+function startMedia() {
+  welcome.hidden = true;
+  call.hidden = false;
+  getMedia();
+}
+
+// welcom form submit 진행시 이벤트 핸들링 함수
+function handleWelcomeSubmit(event) {
+  event.preventDefault();
+  const input = welcomeForm.querySelector('input');
+  // 백엔드로 join_room이라는 트리거를 이용하여 신호를 보낸다
+  // 이때 전해지는 데이터는 input.value(방이름)이고
+  // 마지막 부분은 콜백함수로 백엔드에서 join_room트리거가 모든 작동을 완료후 done이라는 신호를 프론트로 돌려보내면 startMedia가실행되는 부분
+  // 즉 백엔드에서 성공적으로 방만들기 작업이 끝나면 stream데이터를 뽑아오고 화면에 렌더링 하는 부분들을 진행한다.
+  socket.emit('join_room', input.value, startMedia);
+  // rommName변수에 welcom form 의 input 태그에서 입력받은 값을 할당한다.
+  roomName = input.value;
+  // 위 작업이 모두 끝나면 welcome form의 input.value를 빈 문자열로 할당해준다(초기화)
+  input.value = '';
+}
+
+// welcom form submit 진행시 이벤트 핸들링
+welcomeForm.addEventListener('submit', handleWelcomeSubmit);
+
+// Socket Code
+// 백엔드로부터 welcome트리거를 건드리는 신호를 받으면 작동하는 부분
+// 로직상 백엔드에서 방이 성공적으로 만들어진 이후에 작동하게 설계됐다
+socket.on('welcome', () => {
+  console.log('someone joined');
+});
