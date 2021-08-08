@@ -72,3 +72,11 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 ## 3.5 Offers
 
 - webRTC연결을 위한 offer정보를 만들어서 전달하고 전달 받는 과정 구현
+
+1. getUserMidea()
+2. new RTCPeerConnection() // RTCPeerConnection객체 생성
+3. (이때 myStream.getTracks()안에는 오디오트랙과 비디오 트랙정보가 담겨있는데 각각의 트랙에 위작업에서 생성한 RTCPeerConnection 객체를 연결한다.
+4. addTrack() // 생성된 RTCPeerConnection객체에 track정보 추가
+   (설정값등등..)
+5. createOffer // 새로운 사용자가 내가 속한 방에 접속했다면 나와 연결하기 위한 정보를 해당 새로운 접속자에게 전달하기위해 생성된 RTCPeerConnection객체에 offer 생성한다.
+6. setLocalDescription(); // 이후 RTCPeerConnection객체에 위에서 생성된 offer값을 참조하여 setLocalDescription설정한후 해당 offer정보를 백엔드로 전달하여 나 이외의 방안에있는 모든 접속자에게 내 offer정보를 전달한다.

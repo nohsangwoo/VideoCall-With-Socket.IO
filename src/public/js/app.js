@@ -152,7 +152,7 @@ welcomeForm.addEventListener('submit', handleWelcomeSubmit);
 // 백엔드로부터 welcome트리거를 건드리는 신호를 받으면 작동하는 부분
 // 로직상 백엔드에서 방이 성공적으로 만들어진 이후에 작동하게 설계됐다
 socket.on('welcome', async () => {
-  // offer생성
+  // 다른 사용자가 접속했다면 offer생성하고 내 연결정보(offer)를 생성한다.
   const offer = await myPeerConnection.createOffer();
   // offer정보를 백엔드로 전달하기위한 코드
   myPeerConnection.setLocalDescription(offer);
