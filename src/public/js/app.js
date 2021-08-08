@@ -160,6 +160,8 @@ socket.on('welcome', async () => {
   socket.emit('offer', offer, roomName);
 });
 
+// 기존에 존재하는 방에 접속했을때
+// 기존의 방에 접속하는 유저들의 offer정보를 전달받음
 socket.on('offer', offer => {
   console.log(offer);
 });
