@@ -120,7 +120,7 @@ const welcomeForm = welcome.querySelector('form');
 // 방만들기 form에서 방이름 입력하고 방만들기 진행 한 후 작동하는 기능
 // stream 뽑아와서 렌더링하고 기존 방만들기 관련(welcome부분) form hidden설정해서 안보이게 하고
 // call hidden=false로 설정하여 나타나게 하기
-async function startMedia() {
+async function initCall() {
   welcome.hidden = true;
   call.hidden = false;
   // myStream에 내 stream 데이터 뽑아온다
@@ -131,14 +131,16 @@ async function startMedia() {
 }
 
 // welcom form submit 진행시 이벤트 핸들링 함수
-function handleWelcomeSubmit(event) {
+// 방을 만드는 peer A와 만들어진 방에 입장하는 peerB and c,d..들 모두 공통적으로 작동하는 부분
+async function handleWelcomeSubmit(event) {
   event.preventDefault();
   const input = welcomeForm.querySelector('input');
+  //  stream데이터를 뽑아오고 화면에 렌더링 하는 부분들을 진행한다.
+  // 이부분은 peerA와 peerB가 동시에 진행돼야하는 부분이라 socket.io의 done()으로 처리하지 않음
+  await initCall();
   // 백엔드로 join_room이라는 트리거를 이용하여 신호를 보낸다
-  // 이때 전해지는 데이터는 input.value(방이름)이고
-  // 마지막 부분은 콜백함수로 백엔드에서 join_room트리거가 모든 작동을 완료후 done이라는 신호를 프론트로 돌려보내면 startMedia가실행되는 부분
-  // 즉 백엔드에서 성공적으로 방만들기 작업이 끝나면 stream데이터를 뽑아오고 화면에 렌더링 하는 부분들을 진행한다.
-  socket.emit('join_room', input.value, startMedia);
+  // 이때 전해지는 데이터는 input.value(방이름)이다
+  socket.emit('join_room', input.value);
   // rommName변수에 welcom form 의 input 태그에서 입력받은 값을 할당한다.
   roomName = input.value;
   // 위 작업이 모두 끝나면 welcome form의 input.value를 빈 문자열로 할당해준다(초기화)
@@ -162,8 +164,17 @@ socket.on('welcome', async () => {
 
 // 기존에 존재하는 방에 접속했을때
 // 기존의 방에 접속하는 유저들의 offer정보를 전달받음
-socket.on('offer', offer => {
-  console.log(offer);
+// peer B의 동작(기존 존재하는 방에 새로 접속한 유저)
+socket.on('offer', async offer => {
+  myPeerConnection.setRemoteDescription(offer);
+  const answer = await myPeerConnection.createAnswer();
+  myPeerConnection.setLocalDescription(answer);
+
+  socket.emit('answer', answer, roomName);
+});
+
+socket.on('answer', answer => {
+  myPeerConnection.setRemoteDescription(answer);
 });
 
 // RTC Code (WebRTC를 제어하는 부분)

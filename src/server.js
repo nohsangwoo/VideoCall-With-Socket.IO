@@ -24,9 +24,9 @@ const wsServer = new Server(httpServer, {
 // const wsServer = SocketIO(httpServer);
 
 wsServer.on('connection', socket => {
-  socket.on('join_room', (roomName, done) => {
+  socket.on('join_room', roomName => {
     socket.join(roomName);
-    done();
+
     // 현재 트리거를 날린 대상자를 제외하고 모든 방참여자에게 socket신호를 전달
     socket.to(roomName).emit('welcome');
   });
@@ -34,6 +34,10 @@ wsServer.on('connection', socket => {
   // 트리거를 보낸 사람 이외 방안의 모든 사람에게 다시 뿌려주는 기능
   socket.on('offer', (offer, roomName) => {
     socket.to(roomName).emit('offer', offer);
+  });
+
+  socket.on('answer', (answer, roomName) => {
+    socket.to(roomName).emit('answer', answer);
   });
 });
 
