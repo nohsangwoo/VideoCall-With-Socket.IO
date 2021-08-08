@@ -30,6 +30,11 @@ wsServer.on('connection', socket => {
     // 현재 트리거를 날린 대상자를 제외하고 모든 방참여자에게 socket신호를 전달
     socket.to(roomName).emit('welcome');
   });
+  // 방 생성이후 offer 트리거가 프론트로부터 날라오면 해당 정보를
+  // 트리거를 보낸 사람 이외 방안의 모든 사람에게 다시 뿌려주는 기능
+  socket.on('offer', (offer, roomName) => {
+    socket.to(roomName).emit('offer', offer);
+  });
 });
 
 instrument(wsServer, {

@@ -68,3 +68,7 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 ## 3.4 Rooms
 
 - socket.io 방만들고 만들어진 방에 참여하는 기능 구현
+
+## 3.5 Offers
+
+- webRTC연결을 위한 offer정보를 만들어서 전달하고 전달 받는 과정 구현

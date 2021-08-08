@@ -12,6 +12,7 @@ let myStream;
 let muted = false;
 let cameraOff = false;
 let roomName;
+let myPeerConnection;
 
 // 현재 디바이스에 연결된 모든 카메라 정보를 가져오는 기능
 async function getCameras() {
@@ -119,10 +120,14 @@ const welcomeForm = welcome.querySelector('form');
 // 방만들기 form에서 방이름 입력하고 방만들기 진행 한 후 작동하는 기능
 // stream 뽑아와서 렌더링하고 기존 방만들기 관련(welcome부분) form hidden설정해서 안보이게 하고
 // call hidden=false로 설정하여 나타나게 하기
-function startMedia() {
+async function startMedia() {
   welcome.hidden = true;
   call.hidden = false;
-  getMedia();
+  // myStream에 내 stream 데이터 뽑아온다
+  await getMedia();
+  // 방이 만들어지고 myStream도 잘 뽑아왔으면 peer연결을 위해 webrtc 초기 설정을 한다
+  // myPeerConnection에 RTCPeerConnection객체 생성해서 저장한다.
+  makeConnection();
 }
 
 // welcom form submit 진행시 이벤트 핸들링 함수
@@ -146,6 +151,24 @@ welcomeForm.addEventListener('submit', handleWelcomeSubmit);
 // Socket Code
 // 백엔드로부터 welcome트리거를 건드리는 신호를 받으면 작동하는 부분
 // 로직상 백엔드에서 방이 성공적으로 만들어진 이후에 작동하게 설계됐다
-socket.on('welcome', () => {
-  console.log('someone joined');
+socket.on('welcome', async () => {
+  // offer생성
+  const offer = await myPeerConnection.createOffer();
+  // offer정보를 백엔드로 전달하기위한 코드
+  myPeerConnection.setLocalDescription(offer);
+  console.log('sent the offer');
+  socket.emit('offer', offer, roomName);
 });
+
+socket.on('offer', offer => {
+  console.log(offer);
+});
+
+// RTC Code (WebRTC를 제어하는 부분)
+
+function makeConnection() {
+  myPeerConnection = new RTCPeerConnection();
+  myStream
+    .getTracks()
+    .forEach(track => myPeerConnection.addTrack(track, myStream));
+}
