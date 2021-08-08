@@ -86,4 +86,7 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 - peerA의 offers정보를 받은 후 peerB에서 작업해야할 내용 진행
 
 1. setRemoteDescription(peerA's offer);
-2. setLocalDescription
+2. createAnswer
+3. setLocalDescription
+
+- peer B의 위 작업이 끝나면 peer B의 answer정보를 peer A에서 받고 넘겨 받은 anserData로 setRemoteDescription(peerB's answer)처리 한다.

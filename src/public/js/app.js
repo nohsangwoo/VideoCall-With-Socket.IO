@@ -173,6 +173,7 @@ socket.on('offer', async offer => {
   socket.emit('answer', answer, roomName);
 });
 
+// 방에 새로 접속한 유저를 제외한 모든 유저가 전달 받음
 socket.on('answer', answer => {
   myPeerConnection.setRemoteDescription(answer);
 });

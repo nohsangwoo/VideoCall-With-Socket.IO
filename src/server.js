@@ -36,6 +36,7 @@ wsServer.on('connection', socket => {
     socket.to(roomName).emit('offer', offer);
   });
 
+  // 방에 새로 접속한 사람의 asnwer정보를 방안의 모든 유저에게 전달
   socket.on('answer', (answer, roomName) => {
     socket.to(roomName).emit('answer', answer);
   });
