@@ -90,3 +90,7 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 3. setLocalDescription
 
 - peer B의 위 작업이 끝나면 peer B의 answer정보를 peer A에서 받고 넘겨 받은 anserData로 setRemoteDescription(peerB's answer)처리 한다.
+
+## 3.8 IceCandidate
+
+- 연결에 필요한 여러 후보 정보들을 리스트 업할게되는데 이때 특정 candidate를 선택하고 이 방식으로 서로 통신하겠다 라고 peer간 협의가 완료되면 해당 방식으로 webrtc통신이 이루어진다
