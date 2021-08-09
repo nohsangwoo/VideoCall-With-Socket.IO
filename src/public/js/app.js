@@ -108,6 +108,16 @@ function handleCameraClick() {
 
 async function handleCameraChange() {
   await getMedia(camerasSelect.value);
+  if (myPeerConnection) {
+    const videoTrack = myStream.getVideoTracks()[0];
+    // peerconnection의 sender정보를 불러오는 기능(여기선 비디오 정보를 불러온다)
+    const videoSender = myPeerConnection
+      .getSenders()
+      .find((sender) => sender.track.kind === "video");
+    console.log("videoSender", videoSender);
+    // 상대방에게 보내지는 peerconnecton에서의 stream을 변경하는 기능
+    videoSender.replaceTrack(videoTrack);
+  }
 }
 
 muteBtn.addEventListener("click", handleMuteClick);

@@ -94,3 +94,11 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 ## 3.8 IceCandidate
 
 - 연결에 필요한 여러 후보 정보들을 리스트 업할게되는데 이때 특정 candidate를 선택하고 이 방식으로 서로 통신하겠다 라고 peer간 협의가 완료되면 해당 방식으로 webrtc통신이 이루어진다
+
+## 3.8 Senders (개중요함)
+
+- sender는 상대방에게 보내지는 media Stream track을 컨트롤 할수있는 기능
+
+- 로컬 환경의 webrtc stream은 변경되고있지만 다른유저에게 보내는 stream(new ()로 만들어지는 객체들)정보는 변경되지 않았기때문에 getSenders로 정보를 가져온다
+
+- stream을 다시뽑아오는 경우 상대에게 보내는 stream도 변경되길 원할때 sender설정을 건드려야함
