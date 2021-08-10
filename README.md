@@ -102,3 +102,5 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 - 로컬 환경의 webrtc stream은 변경되고있지만 다른유저에게 보내는 stream(new ()로 만들어지는 객체들)정보는 변경되지 않았기때문에 getSenders로 정보를 가져온다
 
 - stream을 다시뽑아오는 경우 상대에게 보내는 stream도 변경되길 원할때 sender설정을 건드려야함
+
+## 3.9 구글에서 제공하는 무료 stun 서버를 사용해서 접속 정보를 서로에게 전달할수있게 해줌
