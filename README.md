@@ -104,3 +104,43 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 - stream을 다시뽑아오는 경우 상대에게 보내는 stream도 변경되길 원할때 sender설정을 건드려야함
 
 ## 3.9 구글에서 제공하는 무료 stun 서버를 사용해서 접속 정보를 서로에게 전달할수있게 해줌
+
+## datachannel 에 대해 알아보기 (이미지, 문서 등을 전달 하고 전달 받을 수 있음)
+
+## 3.11 Data Channels
+
+- p2p방식으로 파일을 전송하거나 텍스트를 직접 교환할수있는 방식
+- 아주 쉬움
+
+0. Peer A에서 무언가 offer하는 socket이 Data Channel을 생성하는 주체가 되어야 한다.
+1. Peer A에서 데이터 채널을 생성하고
+
+```
+myDataChannel = myPeerConnection.createDataChannel("chat");
+```
+
+2. Peer B에서 Data Channel을 offer가 받아질때 같이 받는다
+
+```
+  myPeerConnection.addEventListener("datachannel", (event) => {
+    myDataChannel = event.channel;
+    myDataChannel.addEventListener("message", (event) =>
+      console.log(event.data)
+    );
+  }
+```
+
+3. 이제 위 과정이 끝난 이후 Peer A쪽에서 데이터 채널을 사용하여 send로 보내면 실시간으로 전달이 가능하다.
+
+```
+ex)
+myDataChannel.send("hello");
+```
+
+## 3.12 Code Challenge
+
+Code Challenge
+Improve the CSS
+Make a Chat using Data Channels
+When a peer leaves the room, remove the stream.
+Send a link to your code on the comments!

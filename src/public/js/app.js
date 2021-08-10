@@ -13,6 +13,7 @@ let muted = false;
 let cameraOff = false;
 let roomName;
 let myPeerConnection;
+let myDataChannel;
 
 // 현재 디바이스에 연결된 모든 카메라 정보를 가져오는 기능
 async function getCameras() {
@@ -166,6 +167,13 @@ welcomeForm.addEventListener("submit", handleWelcomeSubmit);
 // 백엔드로부터 welcome트리거를 건드리는 신호를 받으면 작동하는 부분
 // 로직상 백엔드에서 방이 성공적으로 만들어진 이후에 작동하게 설계됐다
 socket.on("welcome", async () => {
+  // for create dataChannel with Peer A
+  // 무언가 offer하는 socket이 Data Channel을 생성하는 주체가 되어야 한다.
+  // 따라서 여기가 offer를 제공하는 socket트리거 구간이니깐 여기서 Data channel을 생성한다
+  myDataChannel = myPeerConnection.createDataChannel("chat");
+  myDataChannel.addEventListener("message", (event) => console.log(event.data));
+  console.log("made data channel");
+
   // 다른 사용자가 접속했다면 offer생성하고 내 연결정보(offer)를 생성한다.
   const offer = await myPeerConnection.createOffer();
   // offer정보를 백엔드로 전달하기위한 코드
@@ -178,6 +186,13 @@ socket.on("welcome", async () => {
 // 기존의 방에 접속하는 유저들의 offer정보를 전달받음
 // peer B의 동작(기존 존재하는 방에 새로 접속한 유저)
 socket.on("offer", async (offer) => {
+  myPeerConnection.addEventListener("datachannel", (event) => {
+    myDataChannel = event.channel;
+    myDataChannel.addEventListener("message", (event) =>
+      console.log(event.data)
+    );
+  });
+
   console.log("received the offer");
   myPeerConnection.setRemoteDescription(offer);
   const answer = await myPeerConnection.createAnswer();
