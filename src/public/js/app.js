@@ -231,7 +231,7 @@ function makeConnection() {
     ],
   });
   myPeerConnection.addEventListener("icecandidate", handleIce);
-  myPeerConnection.addEventListener("addstream", handleAddStream);
+  myPeerConnection.addEventListener("track", handleAddStream);
   myStream
     .getTracks()
     .forEach((track) => myPeerConnection.addTrack(track, myStream));
@@ -247,5 +247,5 @@ function handleAddStream(data) {
   const peerFace = document.getElementById("peerFace");
   console.log("got an stream from my peer");
   console.log(data);
-  peerFace.srcObject = data.stream;
+  peerFace.srcObject = data.streams[0];
 }
